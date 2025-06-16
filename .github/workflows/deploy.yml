@@ -1,4 +1,4 @@
-name: Deploy to Railway (n8n)
+nname: Deploy to Railway (n8n)
 
 on:
   push:
@@ -13,15 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-     - name: Setup Railway CLI
+      - name: Setup Railway CLI (официально)
         uses: railwayapp/cli-action@v1
         with:
-          railwayToken: ${{ secrets.RAILWAY_TOKEN }
+          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Link Railway project
-        run: railway link --project n8n-railway --environment production
+      - name: Link to Railway project (по .railway/project.json)
+        run: railway link
 
-      - name: Set variables in Railway
+      - name: Set Railway environment variables
         run: |
           railway variables set \
             N8N_ENCRYPTION_KEY="${{ secrets.N8N_ENCRYPTION_KEY }}" \
