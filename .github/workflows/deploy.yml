@@ -30,12 +30,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Link to Railway project
-        run: railway link
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-      - name: Set Railsway variables
+      - name: Set Railway env vars
         run: |
           railway variables set N8N_ENCRYPTION_KEY "$N8N_ENCRYPTION_KEY"
           railway variables set QUEUE_MODE_REDIS_HOST "$QUEUE_MODE_REDIS_HOST"
@@ -53,7 +48,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Deploy ${{ matrix.service }}
+      - name: Redeploy ${{ matrix.service }}
         run: |
           echo "Deploying service: ${{ matrix.service }}"
           railway redeploy --project $RAILWAY_PROJECT_ID --service ${{ matrix.service }} --yes
