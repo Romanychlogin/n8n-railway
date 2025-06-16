@@ -19,9 +19,8 @@ jobs:
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
 
       - name: Link project
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway link
+        run: |
+          RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }} railway link
 
       - name: Set Railway environment variables
         run: |
