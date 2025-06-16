@@ -8,20 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Install Railway CLI
-        run: |
-          curl -fsSL https://railway.app/install.sh | sh
-          echo "$HOME/.railway/bin" >> $GITHUB_PATH
 
       - name: Link to Railway project
         run: railway link
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Set environment variables
         run: |
@@ -36,10 +32,6 @@ jobs:
             N8N_RUNNERS_ENABLED=true \
             N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
             EXECUTIONS_MODE=queue
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway
         run: railway up
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
