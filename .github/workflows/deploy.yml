@@ -13,19 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Railway CLI manually
+      - name: Install Railway CLI
         run: |
           curl -fsSL https://railway.app/install.sh | sh
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
 
-      - name: Link project
+      - name: Link project and set variables
         run: |
-          export PATH="$HOME/.railway/bin:$PATH"
-          echo "${{ secrets.RAILWAY_TOKEN }}" | railway login
           railway link
-
-      - name: Set Railway environment variables
-        run: |
           railway variables set \
             N8N_ENCRYPTION_KEY="${{ secrets.N8N_ENCRYPTION_KEY }}" \
             QUEUE_MODE_REDIS_HOST="${{ secrets.QUEUE_MODE_REDIS_HOST }}" \
@@ -40,3 +35,5 @@ jobs:
 
       - name: Deploy to Railway
         run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
