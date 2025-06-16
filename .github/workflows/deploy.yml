@@ -1,4 +1,4 @@
-nname: Deploy to Railway (n8n)
+name: Deploy to Railway (n8n)
 
 on:
   push:
