@@ -20,7 +20,9 @@ jobs:
 
       - name: Link project
         run: |
-          RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }} railway link
+          export PATH="$HOME/.railway/bin:$PATH"
+          echo "${{ secrets.RAILWAY_TOKEN }}" | railway login
+          railway link
 
       - name: Set Railway environment variables
         run: |
