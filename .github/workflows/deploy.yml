@@ -18,9 +18,13 @@ jobs:
           curl -fsSL https://railway.app/install.sh | sh
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
 
-      - name: Link project and set variables
+      - name: Link to Railway project
+        run: railway link
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Set environment variables
         run: |
-          railway link
           railway variables set \
             N8N_ENCRYPTION_KEY="${{ secrets.N8N_ENCRYPTION_KEY }}" \
             QUEUE_MODE_REDIS_HOST="${{ secrets.QUEUE_MODE_REDIS_HOST }}" \
@@ -32,6 +36,8 @@ jobs:
             N8N_RUNNERS_ENABLED=true \
             N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
             EXECUTIONS_MODE=queue
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway
         run: railway up
