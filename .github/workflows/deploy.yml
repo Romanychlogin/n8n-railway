@@ -1,0 +1,40 @@
+name: Deploy to Railway (n8n)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Railway CLI
+        run: npm install -g railway
+
+      - name: Login to Railway
+        run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Link Railway project
+        run: railway link --project n8n-railway --environment production
+
+      - name: Set variables in Railway
+        run: |
+          railway variables set \
+            N8N_ENCRYPTION_KEY="${{ secrets.N8N_ENCRYPTION_KEY }}" \
+            QUEUE_MODE_REDIS_HOST="${{ secrets.QUEUE_MODE_REDIS_HOST }}" \
+            QUEUE_MODE_REDIS_PASSWORD="${{ secrets.QUEUE_MODE_REDIS_PASSWORD }}" \
+            DB_POSTGRESDB_HOST="${{ secrets.DB_POSTGRESDB_HOST }}" \
+            DB_POSTGRESDB_USER="${{ secrets.DB_POSTGRESDB_USER }}" \
+            DB_POSTGRESDB_PASSWORD="${{ secrets.DB_POSTGRESDB_PASSWORD }}" \
+            DB_POSTGRESDB_DATABASE="${{ secrets.DB_POSTGRESDB_DATABASE }}" \
+            N8N_RUNNERS_ENABLED=true \
+            N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+            EXECUTIONS_MODE=queue
+
+      - name: Deploy to Railway
+        run: railway up
