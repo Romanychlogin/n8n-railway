@@ -30,11 +30,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set Railway variables for ${{ matrix.service }}
+      - name: Link to Railway project
+        run: railway link
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Set Railsway variables
         run: |
-          railway variables set             N8N_ENCRYPTION_KEY="$N8N_ENCRYPTION_KEY"             QUEUE_MODE_REDIS_HOST="$QUEUE_MODE_REDIS_HOST"             QUEUE_MODE_REDIS_PASSWORD="$QUEUE_MODE_REDIS_PASSWORD"             DB_POSTGRESDB_HOST="$DB_POSTGRESDB_HOST"             DB_POSTGRESDB_USER="$DB_POSTGRESDB_USER"             DB_POSTGRESDB_PASSWORD="$DB_POSTGRESDB_PASSWORD"             DB_POSTGRESDB_DATABASE="$DB_POSTGRESDB_DATABASE"             N8N_BASIC_AUTH_ACTIVE=true             N8N_BASIC_AUTH_USER="$N8N_BASIC_AUTH_USER"             N8N_BASIC_AUTH_PASSWORD="$N8N_BASIC_AUTH_PASSWORD"             N8N_RUNNERS_ENABLED=true             N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true             EXECUTIONS_MODE=queue
+          railway variables set N8N_ENCRYPTION_KEY "$N8N_ENCRYPTION_KEY"
+          railway variables set QUEUE_MODE_REDIS_HOST "$QUEUE_MODE_REDIS_HOST"
+          railway variables set QUEUE_MODE_REDIS_PASSWORD "$QUEUE_MODE_REDIS_PASSWORD"
+          railway variables set DB_POSTGRESDB_HOST "$DB_POSTGRESDB_HOST"
+          railway variables set DB_POSTGRESDB_USER "$DB_POSTGRESDB_USER"
+          railway variables set DB_POSTGRESDB_PASSWORD "$DB_POSTGRESDB_PASSWORD"
+          railway variables set DB_POSTGRESDB_DATABASE "$DB_POSTGRESDB_DATABASE"
+          railway variables set N8N_BASIC_AUTH_ACTIVE "true"
+          railway variables set N8N_BASIC_AUTH_USER "$N8N_BASIC_AUTH_USER"
+          railway variables set N8N_BASIC_AUTH_PASSWORD "$N8N_BASIC_AUTH_PASSWORD"
+          railway variables set N8N_RUNNERS_ENABLED "true"
+          railway variables set N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS "true"
+          railway variables set EXECUTIONS_MODE "queue"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy ${{ matrix.service }}
         run: |
           echo "Deploying service: ${{ matrix.service }}"
           railway redeploy --project $RAILWAY_PROJECT_ID --service ${{ matrix.service }} --yes
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
