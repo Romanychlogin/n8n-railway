@@ -1,2 +1,2 @@
 #!/bin/sh
-n8n worker --concurrency=6
+n8n worker --concurrency=12
